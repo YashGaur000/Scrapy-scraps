@@ -1,0 +1,13 @@
+#Trigger the workflow on push
+    #but only for the master branch
+
+on:
+    push:
+        branches:
+            - master
+
+jobs: 
+    build-test-deploy:
+        runs-on: ubuntu-latest
+        steps:
+            #write ur steps 
