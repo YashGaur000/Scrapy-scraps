@@ -11,13 +11,15 @@ r = requests.get("https://www.flipkart.com/search?q=samsung+mobiles&sid=tyy%2C4i
 soup = BeautifulSoup(r.content, 'lxml')
 
 productlist=soup.find_all('div', class_='_4rR01T')
-pricelist=soup.find_all('div', class_='_30jeq3 _1_WHN1')
+# pricelist=soup.find_all('div', class_='_30jeq3 _1_WHN1')
 
-print(productlist)
-print(pricelist)
+# print(productlist)
+# print(pricelist)
 
-# productlinks = []
+productlinks = []
 
-# for item in productlist:
-#     for link in item.find_all('a', href=True):
-#         print(link['href'])
+for item in productlist:
+    # for link in item.find_all('a', href=True):
+    productlinks.append(item)
+
+print(len(productlinks))    #number of items per page
