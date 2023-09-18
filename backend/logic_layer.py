@@ -9,28 +9,29 @@ Headers = {
 
 
 productlinks = []
+
 for x in range (1,6):
     r = requests.get(f"https://www.flipkart.com/search?q=samsung+mobiles&sid=tyy%2C4io&as=on&as-show=on&otracker=AS_QueryStore_OrganicAutoSuggest_1_7_na_na_na&otracker1=AS_QueryStore_OrganicAutoSuggest_1_7_na_na_na&as-pos=1&as-type=RECENT&suggestionId=samsung+mobiles%7CMobiles&requestId=c3b79e99-6b4f-4c77-8c28-ed671b5e964d&as-backfill=on&page={x}")
     soup = BeautifulSoup(r.content, 'lxml')
+    mobiles=(soup.find_all('div', class_='_4rR01T'))
+    prices=(soup.find_all('div', class_='_30jeq3 _1_WHN1'))
 
-    mobiles=(soup.find('div', class_='_4rR01T').text)
-    price=(soup.find('div', class_='_30jeq3 _1_WHN1').text)
+    for mobile, price in zip(mobiles, prices):
+        mobile_details = {
+            'mobile': mobile.text,
+            'price': price.text
+        }
+    print(mobiles, prices)
+    print(mobile_details)   #output => {'mobile': 'SAMSUNG Galaxy M33 5G (Mystique Green, 128 GB)', 'price': '₹16,989'}
 
-mobile_details = {
-    'mobile': mobiles,
-    'price': price
-}
-
-print(mobile_details)   #output => {'mobile': 'SAMSUNG Galaxy M33 5G (Mystique Green, 128 GB)', 'price': '₹16,989'}
-
-    # pricelist=soup.find_all('div', class_='_30jeq3 _1_WHN1')
+productlist=(soup.find('div', class_='_30jeq3 _1_WHN1'))
 
     # print(productlist)
     # print(pricelist)
 
 
-#     for item in productlist:
-#         # for link in item.find_all('a', href=True):
-#         productlinks.append(item)
+for item in productlist:
+    # for link in item.find_all('a', href=True):
+    productlinks.append(item)
 
-# print(productlinks)    #number of items per page
+print(productlinks)    #number of items per page
