@@ -1,3 +1,4 @@
 ignores that should not be uploaded
 
 ./nodemodules
+.idea/
