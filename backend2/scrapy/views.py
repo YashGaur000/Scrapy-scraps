@@ -54,6 +54,7 @@ def fetch_flipkart_data(product_name):
 
 
 def fetch_amazon_data(product_name):
+    base_url = "https://www.amazon.in"
     url = "https://www.amazon.in/s?k=" + product_name
     data = requests.get(url, headers=Headers)
     soup = BeautifulSoup(data.content, 'lxml')
@@ -61,9 +62,11 @@ def fetch_amazon_data(product_name):
     src = image_div["src"]
     # print(src)
     get_div = soup.find("div", attrs={"class": "sg-col-inner"})
+
     mobile_titles = get_div.find_all("span", {"class": ["a-color-state", "a-text-bold"]})
-    url = get_div.find("a")
-    # print(url)
+    product_url = soup.find("a", attrs={"class": ["a-link-normal", "s-underline-text", "s-underline-link-text"]})
+    url = product_url["href"]
+    complete_url = base_url + url
     prices = soup.find_all("span", {"class": "a-price-whole"})
     # print(prices)
     for mobile_title, mobile_price in zip(mobile_titles, prices):
@@ -72,7 +75,7 @@ def fetch_amazon_data(product_name):
 
         break
 
-    return title, price, src
+    return title, price, src, complete_url
 
 class DisplayData(APIView):
 
@@ -80,7 +83,7 @@ class DisplayData(APIView):
     def get(self, request):
         product_name = "Apple iPhone 15 Plus (128 GB) - Blue"
         try:
-            amazon.title, amazon.price, amazon.image = fetch_amazon_data(product_name)
+            amazon.title, amazon.price, amazon.image, amazon.url = fetch_amazon_data(product_name)
             flipkart.title, flipkart.price, flipkart.image, flipkart.url = fetch_flipkart_data(product_name)
 
         except:
@@ -94,7 +97,8 @@ class DisplayData(APIView):
                 "amazon": {
                  "title": amazon.title,
                  "price": amazon.price,
-                 "image": amazon.image
+                 "image": amazon.image,
+                 "url": amazon.url,
                 },
                 "flipkart": {
                  "title": flipkart.title,
