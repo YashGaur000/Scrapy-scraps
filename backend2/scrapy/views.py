@@ -1,8 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 from django.shortcuts import render
-
-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+FILE_CHARSET = 'utf-8'
+DEFAULT_CHARSET = 'utf-8'
 class MarketPlace:
     def __int__(self, title, image, url, price):
         self.title = title
@@ -47,7 +49,7 @@ def fetch_flipkart_data(product_name):
         url = base_url + product_name
         data = requests.get(url, headers=header_flipkart)
         soup = BeautifulSoup(data.content, 'lxml')
-        print(data.content)
+        # print(data.content)
         mobile_titles = soup.find_all("div", {"class": "_4rR01T"})
         prices = soup.find_all("div", {"class": ["_30jeq3", "_1_WHN1"]})
         image_srcs_div = soup.find_all("div", {"class": "CXW8mj"})
@@ -55,7 +57,7 @@ def fetch_flipkart_data(product_name):
         for mobile_title, mobile_price, image_src_div, product in zip(mobile_titles, prices, image_srcs_div,
                                                                       product_links):
             url = product["href"]
-            print(url)
+            # print(url)
             product_url = web_url + url
             image = image_src_div.find("img")
             image_src = image["src"]
@@ -127,7 +129,6 @@ def display_data(request):
 
         else:
             Response = {
-                "status": 200,
                 "amazon": {
                     "Product_name": amazon.title,
                     "price": amazon.price,
@@ -141,5 +142,6 @@ def display_data(request):
                     "Product_Url": flipkart.url
                 }
             }
+            # print(Response)
             return render(request, "scrapy/index.html", Response)
     return render(request, "scrapy/index.html")

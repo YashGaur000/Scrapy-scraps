@@ -19,29 +19,28 @@
             <button class="search-form" id="search-button" type="submit">Search</button>
         </form>
     </div>
-    <div id="content">
-        <div class="row">
-          <div class="column">
-            <div class="card" id="card1">
-              <img href="{{ Response.amazon.ImageUrl }}">
-              <p>{{ Response.amazon.Product_name }}</p>
-              <p>{{ Response.amazon.price }}</p>
-              <p>{{ Response.amazon.Product_Url }}</p>
-            </div>
-        </div>
+      <table>
+        <tr>
+          <th>FlipKart</th>
+          <th>Amazon</th>
+        </tr>
+        <tr>
+            <td><img src="{{ flipkart.ImageUrl }}"></td>
+            <td><img src="{{ amazon.ImageUrl }}"></td>
+        </tr>
+        <tr>
+          <td><p>{{ flipkart.Product_name }}</p></td>
+          <td><p>{{ amazon.Product_name }}</p></td>
+        </tr>
+        <tr>
+          <td><p>{{ flipkart.price }}</p></td>
+          <td><p>{{ amazon.price }}</p></td>
 
-       <div class="column">
-         <div class="card" id="card2">
-               <img href="{{ Response.flipkart.ImageUrl }}">
-               <p>{{ Response.flipkart.Product_name }}</p>
-               <p>{{ Response.flipkart.price }}</p>
-               <p>{{ Response.flipkart.Product_Url }}</p>
-         </div>
-       </div>
-
-    </div>
-    </div>
-
-</div>
+        </tr>
+        <tr>
+            <td>{{ flipkart.Product_Url }}</td>
+            <td>{{ amazon.Product_Url }}</td>
+        </tr>
+      </table>
 </body>
 </html>
