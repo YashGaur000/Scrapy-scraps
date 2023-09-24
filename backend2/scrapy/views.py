@@ -47,7 +47,7 @@ def fetch_flipkart_data(product_name):
     try:
         web_url = "https://www.flipkart.com"
         base_url = "https://www.flipkart.com/search?q="
-        url = web_url + product_name
+        url = base_url + product_name
         data = requests.get(url, headers=header_flipkart)
         soup = BeautifulSoup(data.content, 'lxml')
         print(data.content)
@@ -119,7 +119,7 @@ class DisplayData(APIView):
 
     ## This is currently for testing
     def get(self, request):
-        product_name = "Iphone 15"
+        product_name = "HONOR 90 (Diamond Silver, 8GB + 256GB)"
 
         try:
             amazon.title, amazon.price, amazon.image, amazon.url = fetch_amazon_data(product_name)
