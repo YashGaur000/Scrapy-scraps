@@ -5,12 +5,11 @@ from rest_framework.response import Response
 
 
 class MarketPlace:
-    def __int__(self, title, image, url, price, desc):
+    def __int__(self, title, image, url, price):
         self.title = title
         self.image = image
         self.url = url
         self.price = price
-        self.desc = desc
 
     def __repr__(self):
         return f"{self.title}{self.price}{self.url}{self.image}{self.desc}"
@@ -59,7 +58,7 @@ def fetch_flipkart_data(product_name):
                                                                       product_links):
             url = product["href"]
             print(url)
-            product_url = base_url + url
+            product_url = web_url + url
             image = image_src_div.find("img")
             image_src = image["src"]
             title = mobile_title.text
@@ -116,11 +115,9 @@ def fetch_amazon_data(product_name):
 
 
 class DisplayData(APIView):
-
-    ## This is currently for testing
-    def get(self, request):
-        product_name = "HONOR 90 (Diamond Silver, 8GB + 256GB)"
-
+    def post(self, request):
+        product_name = request.data.get("product-name")
+        print(product_name)
         try:
             amazon.title, amazon.price, amazon.image, amazon.url = fetch_amazon_data(product_name)
             flipkart.title, flipkart.price, flipkart.image, flipkart.url = fetch_flipkart_data(product_name)
@@ -146,13 +143,3 @@ class DisplayData(APIView):
                     "Product_Url": flipkart.url
                 }
             })
-
-    # This is not working at this moment will be implemented later
-    def post(self, request):
-        product_name = request.POST["product-name"]
-        amazon_title, amazon_price = fetch_amazon_data(product_name)
-        flipkart_title, flipkart_price, image_src = fetch_flipkart_data(product_name)
-        return Response({
-            "Amazon": {"title": amazon_title, "price": amazon_price},
-            "Flipkart": {"title": flipkart_title, "price": flipkart_price, "img src": image_src}
-        })
