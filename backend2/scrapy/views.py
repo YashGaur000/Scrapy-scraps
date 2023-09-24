@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from rest_framework.decorators import APIView
-from rest_framework.response import Response
+from django.shortcuts import render
 
 
 class MarketPlace:
@@ -27,7 +26,6 @@ header_amazon = {
     "Accept-Language": "en-US,en;q=0.9",
     "User-Agent": "Mozilla/5.0 (iPad; CPU OS 13_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/87.0.4280.77 Mobile/15E148 Safari/604.1"
 }
-
 products = [
     "Samsung 236L 3 Star Digital Inverter Frost-Free Double Door Refrigerator (RT28C3053S8/HL,Elegant Inox , 2023 Model)",
     "Samsung Galaxy Z Fold5 5G (Cream, 12GB RAM, 512GB Storage)",
@@ -104,7 +102,6 @@ def fetch_amazon_data(product_name):
             price = mobile_price.text
 
             break
-        desc = fetch_amazon_product_desc(url=complete_url)
         return title, price, src, complete_url
     except Exception:
         title = "None"
@@ -114,21 +111,22 @@ def fetch_amazon_data(product_name):
         return title, price, src, product_url
 
 
-class DisplayData(APIView):
-    def post(self, request):
-        product_name = request.data.get("product-name")
+def display_data(request):
+
+    if request.method == "POST":
+        product_name = request.POST["product-name"]
         print(product_name)
         try:
             amazon.title, amazon.price, amazon.image, amazon.url = fetch_amazon_data(product_name)
             flipkart.title, flipkart.price, flipkart.image, flipkart.url = fetch_flipkart_data(product_name)
 
         except:
-            return Response({
+            Response = {
                 "status": 404
-            })
+            }
 
         else:
-            return Response({
+            Response = {
                 "status": 200,
                 "amazon": {
                     "Product_name": amazon.title,
@@ -142,4 +140,6 @@ class DisplayData(APIView):
                     "ImageUrl": flipkart.image,
                     "Product_Url": flipkart.url
                 }
-            })
+            }
+            return render(request, "scrapy/index.html", Response)
+    return render(request, "scrapy/index.html")

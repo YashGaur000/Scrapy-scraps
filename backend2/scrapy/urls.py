@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import DisplayData
+from . import views
 
 
 urlpatterns = [
-    path("", DisplayData.as_view(), name="ToDo")
+    path("", views.display_data, name="displayData")
 
 ]

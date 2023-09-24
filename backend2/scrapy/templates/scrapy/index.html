@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'scrapy/stylesheet.css' %}">
+</head>
+<body>
+    <header>
+        <div id="headers">
+            <h1 id="title">Price Comparison</h1>
+        </div>
+    </header>
+    <div id="search">
+        <form  method="post">
+            {% csrf_token %}
+            <input class="search-form" id="search-box" name="product-name" placeholder="Samsung Galaxy Z Fold5 5G (Cream, 12GB RAM, 512GB Storage)">
+            <button class="search-form" id="search-button" type="submit">Search</button>
+        </form>
+    </div>
+    <div id="content">
+        <div class="row">
+          <div class="column">
+            <div class="card" id="card1">
+              <img href="{{ Response.amazon.ImageUrl }}">
+              <p>{{ Response.amazon.Product_name }}</p>
+              <p>{{ Response.amazon.price }}</p>
+              <p>{{ Response.amazon.Product_Url }}</p>
+            </div>
+        </div>
+
+       <div class="column">
+         <div class="card" id="card2">
+               <img href="{{ Response.flipkart.ImageUrl }}">
+               <p>{{ Response.flipkart.Product_name }}</p>
+               <p>{{ Response.flipkart.price }}</p>
+               <p>{{ Response.flipkart.Product_Url }}</p>
+         </div>
+       </div>
+
+    </div>
+    </div>
+
+</div>
+</body>
+</html>
