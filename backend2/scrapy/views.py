@@ -16,8 +16,17 @@ class MarketPlace:
         return f"{self.title}{self.price}{self.url}{self.image}{self.desc}"
 
 
-Headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.59'
+header_flipkart = {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "en-US,en;q=0.9",
+    "User-Agent": "Mozilla/5.0 (iPad; CPU OS 13_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/87.0.4280.77 Mobile/15E148 Safari/604.1"
+}
+header_amazon = {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "en-US,en;q=0.9",
+    "User-Agent": "Mozilla/5.0 (iPad; CPU OS 13_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/87.0.4280.77 Mobile/15E148 Safari/604.1"
 }
 
 products = [
@@ -31,19 +40,23 @@ amazon = MarketPlace()
 flipkart = MarketPlace()
 croma = MarketPlace()
 
+
+
+
 def fetch_flipkart_data(product_name):
     try:
         web_url = "https://www.flipkart.com"
         base_url = "https://www.flipkart.com/search?q="
         url = web_url + product_name
-        data = requests.get(url)
+        data = requests.get(url, headers=header_flipkart)
         soup = BeautifulSoup(data.content, 'lxml')
+        print(data.content)
         mobile_titles = soup.find_all("div", {"class": "_4rR01T"})
         prices = soup.find_all("div", {"class": ["_30jeq3", "_1_WHN1"]})
-
         image_srcs_div = soup.find_all("div", {"class": "CXW8mj"})
         product_links = soup.find_all("a", {"class": "_1fQZEK"})
-        for mobile_title, mobile_price, image_src_div, product in zip(mobile_titles, prices, image_srcs_div, product_links):
+        for mobile_title, mobile_price, image_src_div, product in zip(mobile_titles, prices, image_srcs_div,
+                                                                      product_links):
             url = product["href"]
             print(url)
             product_url = base_url + url
@@ -61,11 +74,16 @@ def fetch_flipkart_data(product_name):
         product_url = "None"
         return title, price, image_src, product_url
 
+def fetch_amazon_product_desc(url):
+    data = requests.get(url, headers=header_amazon)
+    soup = BeautifulSoup(data.content, 'lxml')
+
+
 def fetch_amazon_data(product_name):
     try:
         base_url = "https://www.amazon.in"
         url = "https://www.amazon.in/s?k=" + product_name
-        data = requests.get(url, headers=Headers)
+        data = requests.get(url, headers=header_amazon)
         # print("Response is : ", data.content)
         soup = BeautifulSoup(data.content, 'lxml')
         image_div = soup.find("img", {"class": "s-image"})
@@ -74,7 +92,8 @@ def fetch_amazon_data(product_name):
         get_div = soup.find("div", attrs={"class": "sg-col-inner"})
 
         mobile_titles = get_div.find_all("span", {"class": ["a-color-state", "a-text-bold"]})
-        product_urls_h2 = soup.find_all("h2", {"class": ["a-size-mini", "a-spacing_none", "a-color-base", "s-line-clamp-2"]})
+        product_urls_h2 = soup.find_all("h2",
+                                        {"class": ["a-size-mini", "a-spacing_none", "a-color-base", "s-line-clamp-2"]})
 
         # complete_url = base_url + product_url["href"]
         prices = soup.find_all("span", {"class": "a-price-whole"})
@@ -86,20 +105,21 @@ def fetch_amazon_data(product_name):
             price = mobile_price.text
 
             break
-
+        desc = fetch_amazon_product_desc(url=complete_url)
         return title, price, src, complete_url
     except Exception:
         title = "None"
         price = "None"
         src = "None"
         complete_url = "None"
-        return title, price, image_src, product_url
+        return title, price, src, product_url
+
 
 class DisplayData(APIView):
 
-## This is currently for testing
+    ## This is currently for testing
     def get(self, request):
-        product_name = "HP Victus AMD Ryzen 7-5800H"
+        product_name = "Iphone 15"
 
         try:
             amazon.title, amazon.price, amazon.image, amazon.url = fetch_amazon_data(product_name)
@@ -114,20 +134,20 @@ class DisplayData(APIView):
             return Response({
                 "status": 200,
                 "amazon": {
-                 "title": amazon.title,
-                 "price": amazon.price,
-                 "image": amazon.image,
-                 "url": amazon.url,
+                    "Product_name": amazon.title,
+                    "price": amazon.price,
+                    "ImageUrl": amazon.image,
+                    "Product_Url": amazon.url,
                 },
                 "flipkart": {
-                 "title": flipkart.title,
-                 "price": flipkart.price,
-                 "image": flipkart.image,
-                 "url": flipkart.url
+                    "Product_name": flipkart.title,
+                    "price": flipkart.price,
+                    "ImageUrl": flipkart.image,
+                    "Product_Url": flipkart.url
                 }
             })
 
-# This is not working at this moment will be implemented later
+    # This is not working at this moment will be implemented later
     def post(self, request):
         product_name = request.POST["product-name"]
         amazon_title, amazon_price = fetch_amazon_data(product_name)
