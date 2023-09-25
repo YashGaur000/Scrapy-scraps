@@ -5,6 +5,80 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="{% static 'scrapy/stylesheet.css' %}">
+    <style>
+      *{
+        color: red;
+      }
+      .card {
+        box-shadow: 0 4px 8px 0 ;
+        max-width: 300px;
+        margin: auto;
+        text-align: center;
+        font-family: arial;
+      }
+      
+      .title {
+        color: red;
+        font-size: 18px;
+      }
+      
+      button {
+        border: none;
+        outline: 0;
+        padding: 8px;
+        color: white;
+        background-color: black;
+        text-align: center;
+        cursor: pointer;
+        width: 100%;
+        font-size: 18px;
+      }
+      
+      a {
+        text-decoration: none;
+        font-size: 22px;
+        color: black;
+      }
+      
+      button:hover, a:hover {
+        opacity: 0.7;
+      }
+      #card1{
+        postion: absolute;
+        right: 0px; 
+        box-shadow: 0 4px 8px 0 ;
+        max-width: 300px;
+        margin: auto;
+        text-align: center;
+        font-family: arial;
+      }
+      .title1 {
+        color: pink;
+        font-size: 18px;
+      }
+      
+      button1 {
+        border: none;
+        outline: 0;
+        padding: 8px;
+        color: pink;
+        background-color: #000;
+        text-align: center;
+        cursor: pointer;
+        width: 100%;
+        font-size: 18px;
+      }
+      
+      a1 {
+        text-decoration: none;
+        font-size: 22px;
+        color: black;
+      }
+      
+      button:hover1, a:hover1 {
+        opacity: 0.7;
+      }
+      </style>
 </head>
 <body>
     <header>
@@ -15,32 +89,27 @@
     <div id="search">
         <form  method="post">
             {% csrf_token %}
-            <input class="search-form" id="search-box" name="product-name" placeholder="Samsung Galaxy Z Fold5 5G (Cream, 12GB RAM, 512GB Storage)">
+            <input class="search-form" id="search-box" color="black" name="product-name" placeholder="Samsung Galaxy Z Fold5 5G (Cream, 12GB RAM, 512GB Storage)">
             <button class="search-form" id="search-button" type="submit">Search</button>
         </form>
     </div>
-      <table>
-        <tr>
-          <th>FlipKart</th>
-          <th>Amazon</th>
-        </tr>
-        <tr>
-            <td><img src="{{ flipkart.ImageUrl }}"></td>
-            <td><img src="{{ amazon.ImageUrl }}"></td>
-        </tr>
-        <tr>
-          <td><p>{{ flipkart.Product_name }}</p></td>
-          <td><p>{{ amazon.Product_name }}</p></td>
-        </tr>
-        <tr>
-          <td><p>{{ flipkart.price }}</p></td>
-          <td><p>{{ amazon.price }}</p></td>
+    <h2 style="text-align:center"></h2>
 
-        </tr>
-        <tr>
-            <td>{{ flipkart.Product_Url }}</td>
-            <td>{{ amazon.Product_Url }}</td>
-        </tr>
-      </table>
-</body>
+<div class="card">
+  <p>Flipkart</p>
+  <img src="{{ flipkart.ImageUrl }}" alt="John" style="width:100%">
+  <h1 color="red">{{ flipkart.Product_name }}</h1>
+  <p class="title">{{ flipkart.price }}</p>
+  
+  <p><a href="{{ flipkart.Product_Url }}"><button>See Product</button></p>
+</div>
+<div class="card" id="card1">
+  <p>Amazon</p>
+  <img src="{{ amazon.ImageUrl }}" alt="John" style="width:100%">
+  <h1>{{ amazon.Product_name }}</h1>
+  <p class="title">{{ amazon.price }}</p>
+  
+  <p><a href="{{ amazon.Product_Url }}"><button>See Product</button></p>
+</div>
+      </body>
 </html>

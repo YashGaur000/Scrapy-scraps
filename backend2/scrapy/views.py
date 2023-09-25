@@ -37,7 +37,6 @@ products = [
 
 amazon = MarketPlace()
 flipkart = MarketPlace()
-croma = MarketPlace()
 
 
 
@@ -49,7 +48,7 @@ def fetch_flipkart_data(product_name):
         url = base_url + product_name
         data = requests.get(url, headers=header_flipkart)
         soup = BeautifulSoup(data.content, 'lxml')
-        # print(data.content)
+        # print("content:", data.content)
         mobile_titles = soup.find_all("div", {"class": "_4rR01T"})
         prices = soup.find_all("div", {"class": ["_30jeq3", "_1_WHN1"]})
         image_srcs_div = soup.find_all("div", {"class": "CXW8mj"})
@@ -83,7 +82,7 @@ def fetch_amazon_data(product_name):
         base_url = "https://www.amazon.in"
         url = "https://www.amazon.in/s?k=" + product_name
         data = requests.get(url, headers=header_amazon)
-        # print("Response is : ", data.content)
+        print("Response is : ", data.content)
         soup = BeautifulSoup(data.content, 'lxml')
         image_div = soup.find("img", {"class": "s-image"})
         src = image_div["src"]
@@ -126,6 +125,7 @@ def display_data(request):
             Response = {
                 "status": 404
             }
+            print(Response)
 
         else:
             Response = {
@@ -142,6 +142,6 @@ def display_data(request):
                     "Product_Url": flipkart.url
                 }
             }
-            # print(Response)
+            print(Response)
             return render(request, "scrapy/index.html", Response)
     return render(request, "scrapy/index.html")
